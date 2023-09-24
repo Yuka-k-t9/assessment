@@ -1,114 +1,45 @@
-'use strict';
-const userNameInput = document.getElementById('user-name');
-const assessmentButton = document.getElementById('assessment');
-const resultDivision = document.getElementById('result-area');
-const tweetDivision = document.getElementById('tweet-area');
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="twitter:card" content="summary">
+    <meta property="og:url" content="https://Yuka-k-t9.github.io/assessment/assessment.html">
+    <meta property="og:image" content="https://yuka-k-t9.github.io/assessment/asta.png">
+    <meta property="og:title" content="あなたのいいところ診断">
+    <meta property="og:description" content="N予備校プログラミング入門コースで制作した、「あなたのいいところ診断」サイトです。">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <title>Yuka-k-t9が作ったあなたのいいところ診断</title>
+  </head>
+  <body class="bg-primary-subtle">
+    <header>
+      <nav class="navbar bg-primary" data-bs-theme="dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">あなたのいいところ診断</a>
+        </div>
+      </nav>
+    </header>
 
-assessmentButton.onclick = () => {
-  const userName = userNameInput.value;
-  if (userName.length === 0) {
-    // 名前が空の時は処理を終了する
-    return;
-  }
+    <div class="container pt-5">
+      <h1>あなたのいいところは?</h1>
+      <p>診断したい名前を入れて下さい</p>
+      
+      <div class="row">
+        <div class="col-sm-9 col-lg-6">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control " id="user-name" size="40" maxlength="20" />
+            <button class="btn btn-primary" id="assessment">診断する</button>
+          </div>
+        </div>
+      </div>
 
-  // 診断結果表示エリアの作成
-  resultDivision.innerText = '';
-  
-  // headerDivision の作成
-  const headerDivision = document.createElement('div');
-  headerDivision.setAttribute('class', 'card-header text-bg-primary');
-  headerDivision.innerText = '診断結果';
+      <div class="row">
+        <div class="col-lg-9">
+          <div id="result-area"></div>
+        </div>
+      </div>
+      <div id="tweet-area" class="mt-3"></div>
+    </div>
+    <script src="assessment.js"></script>
 
-  // bodyDivision の作成
-  const bodyDivision = document.createElement('div');
-  bodyDivision.setAttribute('class', 'card-body');
-
-  const paragraph = document.createElement('p');
-  paragraph.setAttribute('class', 'card-text');
-  const result = assessment(userName);
-  paragraph.innerText = result;
-  bodyDivision.appendChild(paragraph);
-
-  // resultDivision に Bootstrap のスタイルを適用する
-  resultDivision.setAttribute('class', 'card');
-
-  // headerDivision と bodyDivision を resultDivision に差し込む
-  resultDivision.appendChild(headerDivision);
-  resultDivision.appendChild(bodyDivision);
-
-  // ツイートエリアの作成
-  tweetDivision.innerText = '';
-  const anchor = document.createElement('a');
-  const hrefValue =
-    'https://twitter.com/intent/tweet?button_hashtag=' +
-    encodeURIComponent('あなたのいいところ') +
-    '&ref_src=twsrc%5Etfw';
-
-  anchor.setAttribute('href', hrefValue);
-  anchor.setAttribute('class', 'twitter-hashtag-button');
-  anchor.setAttribute('data-text', result);
-  anchor.innerText = 'Tweet #あなたのいいところ';
-
-  tweetDivision.appendChild(anchor);
-
-  const script = document.createElement('script');
-  script.setAttribute('src', 'https://platform.twitter.com/widgets.js');
-  tweetDivision.appendChild(script);
-};
-
-userNameInput.onkeydown = event => {
-  if (event.key === 'Enter') {
-    assessmentButton.onclick();
-  }
-};
-
-const answers = [
-  '###userName###のいいところは声です。###userName###の特徴的な声は皆を惹きつけ、心に残ります。',
-  '###userName###のいいところはまなざしです。###userName###に見つめられた人は、気になって仕方がないでしょう。',
-  '###userName###のいいところは情熱です。###userName###の情熱に周りの人は感化されます。',
-  '###userName###のいいところは厳しさです。###userName###の厳しさがものごとをいつも成功に導きます。',
-  '###userName###のいいところは知識です。博識な###userName###を多くの人が頼りにしています。',
-  '###userName###のいいところはユニークさです。###userName###だけのその特徴が皆を楽しくさせます。',
-  '###userName###のいいところは用心深さです。###userName###の洞察に、多くの人が助けられます。',
-  '###userName###のいいところは見た目です。内側から溢れ出る###userName###の良さに皆が気を惹かれます。',
-  '###userName###のいいところは決断力です。###userName###がする決断にいつも助けられる人がいます。',
-  '###userName###のいいところは思いやりです。###userName###に気をかけてもらった多くの人が感謝しています。',
-  '###userName###のいいところは感受性です。###userName###が感じたことに皆が共感し、わかりあうことができます。',
-  '###userName###のいいところは節度です。強引すぎない###userName###の考えに皆が感謝しています。',
-  '###userName###のいいところは好奇心です。新しいことに向かっていく###userName###の心構えが多くの人に魅力的に映ります。',
-  '###userName###のいいところは気配りです。###userName###の配慮が多くの人を救っています。',
-  '###userName###のいいところはその全てです。ありのままの###userName###自身がいいところなのです。',
-  '###userName###のいいところは自制心です。やばいと思ったときにしっかりと衝動を抑えられる###userName###が皆から評価されています。'
-];
-
-/**
- * 名前の文字列を渡すと診断結果を返す関数
- * @param {string} userName ユーザの名前
- * @return {string} 診断結果
- */
-function assessment(userName) {
-  // 全文字のコード番号を取得してそれを足し合わせる
-  let sumOfCharCode = 0;
-  for (let i = 0; i < userName.length; i++) {
-    sumOfCharCode = sumOfCharCode + userName.charCodeAt(i);
-  }
-
-  // 文字のコード番号の合計を回答の数で割って添字の数値を求める
-  const index = sumOfCharCode % answers.length;
-  let result = answers[index];
-
-  result = result.replaceAll('###userName###', userName);
-  return result;
-}
-
-// テストコード
-console.assert(
-  assessment('太郎') ===
-    '太郎のいいところは決断力です。太郎がする決断にいつも助けられる人がいます。',
-  '診断結果の文言の特定の部分を名前に置き換える処理が正しくありません。'
-);
-console.assert(
-  assessment('太郎') === assessment('太郎'),
-  '入力が同じ名前なら同じ診断結果を出力する処理が正しくありません。'
-);
-
+  </body>
+</html>
